@@ -19,4 +19,29 @@ def details(request, pk):
         else:
             print(form.errors)
     else:
-        return render(request, 'products/present_product.html', {'form': form})
+        return render(request, 'products/present_products.html', {'form': form})
+
+def confirmed(request):
+    if request.method == 'POST':
+            # creates form instance and binds data to it
+            form = ProductForm(request.POST or None)
+            if form.is_valid():
+                form.delete()
+                return redirect('admin_console')
+            else:
+                return redirect('admin_console')
+
+def createRecord(request):
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('admin_console')
+    else:
+        print(form.errors)
+        form = ProductForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'products/createRecord.html', context)
+
+
